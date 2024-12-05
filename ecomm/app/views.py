@@ -1,11 +1,11 @@
 
 from django.shortcuts import render, redirect
 from django.views import View
-from . models import Product, Customer, Cart, Wishlist, Comment
+from . models import Product, Customer, Cart, Wishlist, Comment, User
 from django.db.models import Count
 from . forms import CustomerRegistrationForm, CustomerProfileForm, CommentForm
 from django.contrib import messages
-from django.contrib.auth import aauthenticate, logout
+from django.contrib.auth import authenticate, logout, login
 from django.http import JsonResponse
 from django.db.models import Q
 
@@ -66,19 +66,58 @@ class ProductDetail(View):
     
 class CustomerRegistrationView(View):
     def get(self, request):
-        form = CustomerRegistrationForm()
-        totalitem = get_total_cart_items(request)
-        wishtotalitem = get_total_wish_items(request)
-        return render(request, 'app/customerregistration.html', locals())
-    def post(self, request):
-        form = CustomerRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Congratulations! User Register Successfully")
-        else:
-            messages.warning(request, "Invalid Input Data")
-        return render(request, 'app/customerregistration.html', locals())
+        # Render the registration page on GET requests
+        return render(request, 'app/customerregistration.html')
     
+    def post(self, request):
+        # Handle the registration logic on POST requests
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        cpassword = request.POST.get('cpassword')
+        
+        # Validate the form data
+        if not username or not email or not password or not cpassword:
+            messages.warning(request, "All fields are required.")
+            return render(request, 'app/customerregistration.html', locals())
+        
+        if password != cpassword:
+            messages.warning(request, "Passwords do not match.")
+            return render(request, 'app/customerregistration.html', locals())
+        
+        # Check if a user with the same username or email already exists
+        if User.objects.filter(username=username).exists():
+            messages.warning(request, "Username already taken.")
+            return render(request, 'app/customerregistration.html', locals())
+        
+        if User.objects.filter(email=email).exists():
+            messages.warning(request, "Email already registered.")
+            return render(request, 'app/customerregistration.html', locals())
+        
+        # Create the user if everything is valid
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+        messages.success(request, "Congratulations! Profile saved successfully.")
+        return redirect('login') 
+
+
+
+def login_user(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username = username , password = password)
+        if user is not None:
+            login(request, user)
+            #messages.success(request, ("You have been logged in!"))
+            return redirect('home')
+        else:
+            messages.warning(request, ("incorrect username or password!"))
+            return redirect('login')
+        
+    return render(request, 'app/login.html', {})
+
+
 class Comment(View):
     def get(self, request):
         form = CommentForm()
@@ -97,12 +136,11 @@ class Comment(View):
             # Save the comment to the database
             comment.save()
             form.save()
-         
-
             messages.success(request, "Comment submitted successfully!")
         else:
             messages.warning(request, "Invalid Input Data")
-        return render(request, 'app/comments.html', locals())
+        return redirect('comments')
+
     
 class ProfileView(View):
     def get(self, request):
@@ -164,7 +202,7 @@ class updateAddress(View):
 def logout_user(request):
     logout(request)
     messages.success(request, ("You  logged out"))
-    return redirect('/accounts/login/')
+    return redirect('login')
 
 def add_to_cart(request):
     totalitem = get_total_cart_items(request)

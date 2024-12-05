@@ -5,19 +5,24 @@
 {% block main-content %}
 <div class = "container">
 <div class = "row my-3">
-<div class="col-sm-6 offset-sm-3">
+<div class="col-sm-4 col-md-4 offset-sm-4">
 <h3>Login</h3>
 <hr>
-<form action="" method ="post" novalidate class="shadow p-5">
+<form action="{% url 'login' %}" method ="POST" novalidate class="shadow p-5">
 {% csrf_token %}
 
-{% for fm in form %}
-{{fm.label_tag}} {{fm}} <small class= "text-danger">{{fm.errors|striptags}}</small>
-<br>
-{% endfor %}
+  <div class="mb-3">
+   <label for="">Username:</label>
+    <input type="text" class="form-control" id = "username" name = "username"  id = "username" >
+   
+  </div>
+  <div class="mb-3">
+         <label for="">Password:</label>
+    <input type="password" class="form-control" id="password" name = "password" >
+    <i class = "bi bi-eye-slash" id = "togglePassword"></i>
+  </div>
 
-<small><a href = "#"> Forget Password ? </a></small>
-<br>
+
 <input type = "submit" class = "btn btn-primary mt-4" value = "Login">
 <div class = "text-center text-primary fw-bold"><small>New User ? 
 <a href = "{% url 'customerregistration' %}" class = "text-danger">Create an Account</a></small>

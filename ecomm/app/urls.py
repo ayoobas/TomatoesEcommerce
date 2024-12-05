@@ -6,7 +6,7 @@ from django.contrib.auth import views as auth_view
 from .forms import LoginForm, MyPasswordResetForm, MyPasswordChangeForm
 
 urlpatterns = [
-    path('', views.home, name = "home"),
+    path('home/', views.home, name = "home"),
     path('about/', views.about, name = "about"),
     path('contact/', views.contact, name= "contact"),
     path("category/<slug:val>", views.CategoryView.as_view(), name = "category"), #.asview() was used because a class was used in view to define category  also their are several cateogries so the categories are passed in as parameters 
@@ -18,10 +18,11 @@ urlpatterns = [
 
     #Users registration 
     path("registration/", views.CustomerRegistrationView.as_view(), name = "customerregistration"),
-
+    
     #Login authentication
-    path("accounts/login/", auth_view.LoginView.as_view(template_name = "app/login.html",
-    authentication_form = LoginForm), name = 'login'),
+    #path("accounts/login/", auth_view.LoginView.as_view(template_name = "app/login.html",
+    #authentication_form = LoginForm), name = 'login'),
+    path('login/', views.login_user, name = 'login'),
 
     #for add to cart
     path('add-to-cart/', views.add_to_cart, name = 'add-to-cart'),
