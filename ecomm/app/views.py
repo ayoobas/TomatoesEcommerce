@@ -167,7 +167,8 @@ class ProfileView(View):
             messages.success(request, "Congratulations! Profile Save Successfully")
         else:
             messages.warning(request, "invalid Input Data")
-        return render(request, 'app/profile.html', locals())
+        return redirect('profile') 
+        #return render(request, 'app/profile.html', locals())
 
 #use def function when u just want to fetch records from the db
 #use class when u want to display an index page and post with it 
