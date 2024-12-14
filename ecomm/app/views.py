@@ -62,11 +62,14 @@ class ProductDetail(View):
         wishtotalitem = get_total_wish_items(request)
         product = Product.objects.get(id=pk)# get was used bcos only one product details is required at a time 
         wishlist = Wishlist.objects.filter(Q(product = product ) & Q(user = request.user))
+        
         return render(request, "app/productdetail.html", locals())
     
 class CustomerRegistrationView(View):
     def get(self, request):
         # Render the registration page on GET requests
+        totalitem = get_total_cart_items(request)
+        wishtotalitem = get_total_wish_items(request)
         return render(request, 'app/customerregistration.html')
     
     def post(self, request):
@@ -227,6 +230,20 @@ def show_cart(request):
     totalamount = amount + 40
     return render(request, 'app/addtocart.html', locals())
 
+def show_wish(request):
+    totalitem = get_total_cart_items(request)
+    wishtotalitem = get_total_wish_items(request)
+    user = request.user
+    wishlist = Wishlist.objects.filter(user = user)
+    for p in wishlist:
+        print(p.user)
+        print(p.product)
+    amount = 0
+
+    totalamount = amount + 40
+ 
+    return render(request, 'app/wishlist.html', locals())
+
 def plus_cart(request):
     if request.method == "GET":
         prod_id = request.GET['prod_id']
@@ -308,6 +325,11 @@ class checkout(View):
         totalitem = get_total_cart_items(request)
         user= request.user
         add = Customer.objects.filter(user = user)
+        print("add", add)
+        if not add.exists():
+            return redirect("/address")
+              
+    
         cart_items = Cart.objects.filter(user = user)
         famount = 0
         for p in cart_items:
