@@ -21,8 +21,8 @@ class = "img-fluid img-thumbnail shadow-sm" height = "150" width = "150"></div>
 <div class = "my-3">
 
 <div class = "d-flex justify-content-between">
-<a href = "#" class = "remove-cart btn btn-sm btn-secondary mr-3" pid = {{item.products.id}}>Remove item</a>
-<a href = "#" class = "add-cart btn btn-sm btn-secondary mr-3" pid = {{item.products.id}}>Add to Cart</a>
+<a href = "#" class = "remove-wishlist btn btn-sm btn-secondary mr-1" pid = {{item.product.id}}>Remove item</a>
+<a href = "#" class = "add-cart btn btn-sm btn-secondary mr-3" pid = {{item.product.id}}>Add to Cart</a>
 <p class = "mb-0"><span><strong> N.{{item.product.discounted_price}}</strong></span></p>
 
 </div>
@@ -40,9 +40,6 @@ class = "img-fluid img-thumbnail shadow-sm" height = "150" width = "150"></div>
 <div class = "col-sm-4">
 <div class = "card">
 <div class = "card-body">
-
-
-<div class = "d-grid"><a href = "{% url 'checkout' %}" class="btn btn-primary">Place Order</a></div>
 
 {% else %}
 <h1 class = "text-center mb-5">Wishlist is Empty</h1>

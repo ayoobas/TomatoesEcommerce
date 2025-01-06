@@ -80,6 +80,27 @@ $('.remove-cart').click(function(){
 
 
 
+$('.remove-wishlist').click(function(){
+    var id=$(this).attr("pid").toString();
+    var eml=this
+    $.ajax({
+        type:"GET",
+        url:"/removewish",
+        data:{
+            prod_id:id
+        },
+        success:function(data){
+            document.getElementById("eml").innerText= "Cart " +data.quantity 
+            document.getElementById("amount").innerText=data.amount 
+            document.getElementById("totalamount").innerText=data.totalamount
+            eml.parentNode.parentNode.parentNode.parentNode.remove() 
+        }
+    })
+})
+
+
+
+
 
 
 $('.plus-wishlist').click(function(){

@@ -164,7 +164,13 @@ class ProfileView(View):
             zipcode = form.cleaned_data['zipcode']
             reg = Customer(user=user, firstname=firstname, lastname = lastname, city =city, mobile = mobile, state = state,
                            zipcode = zipcode)
-            reg.save()          
+            reg.save()     
+            #if there is no need to include user when saving the profile 
+            # just use use 
+            # form = CustomerProfileForm(request.POST, instance = Customer)
+            # if form.is_valid():
+            #    form.save()
+            #    return      
             
             
             messages.success(request, "Congratulations! Profile Save Successfully")
@@ -199,6 +205,7 @@ class updateAddress(View):
             add.state = form.cleaned_data['state']
             add.zipcode = form.cleaned_data['zipcode']
             add.save()
+          
         else:
             messages.warning(request,"Invalid Input Data")
         return redirect("address") #to show the address page

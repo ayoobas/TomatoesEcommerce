@@ -63,5 +63,16 @@ class CommentForm(forms.ModelForm):
         class Meta:
             model = Comment
             fields = ['comment']
+
+#instead of your label, u can also use labels 
+#labels = {
+# 'name':'Your Name',
+# 'email':'Your Email',
+# 'bio':'Your Details',
+# 'phone_number':'Contact Number'
+#bio is from the model, the same with others
+
+
+#}
  
 
